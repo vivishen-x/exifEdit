@@ -2,7 +2,6 @@ from matplotlib import pyplot as py
 from matplotlib.widgets import Button,RadioButtons
 from PIL import Image
 import PIL.ExifTags
-from playsound import playsound
 import piexif
 
 path = "./test.jpg"
@@ -88,22 +87,10 @@ def draw_ok():
 def ok_press(event):
     insertComment()
     print ('Emotion information Saved!')
-    insertSoundfile()
-    print ('Sound file inserted!')
     quit()
 
 def button_press(event):
     print ('button is pressed!')
-
-def emo_to_filter(num):
-    emotion = {
-        -2 : "binary",
-        -1 : "bone",
-        0 : "None",
-        1 : "pink",
-        2 : "wistia"
-    }
-    return emotion.get(num, None)
 
 def insertComment():
     exif_dict = piexif.load(path)
@@ -111,15 +98,7 @@ def insertComment():
     exif_dict['Exif'][piexif.ExifIFD.UserComment] = usercomment.encode()
     exif_bytes = piexif.dump(exif_dict)
     piexif.insert(exif_bytes,path)
-
-def insertSoundfile():
-    exif_dict = piexif.load(path)
-    sound_info = 'Sound[' + str(emotion) + '].mp3'
-    exif_dict['Exif'][piexif.ExifIFD.RelatedSoundFile] = sound_info.encode()
-    exif_bytes = piexif.dump(exif_dict)
-    piexif.insert(exif_bytes, path)
-
-
+    
 if __name__ == "__main__":
     img = Image.open(path)
     fig = py.figure(figsize=(4,6))
